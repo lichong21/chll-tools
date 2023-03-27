@@ -1,5 +1,7 @@
 // LRU (Least Recently Used), 最久没有被访问过的，应该优先被移除
 
+// -------------------Map
+
 class LRUMap {
     constructor(capacity) {
         this.capacity = capacity;
@@ -26,6 +28,41 @@ class LRUMap {
         this.map.set(key, value);
     }
 }
+
+// -------------------Array
+
+class LRUArray {
+    constructor(capacity) {
+        this.capacity = capacity;
+        this.cache = [];
+        this.cacheMap = {};
+    }
+
+    get (key) {
+        const value = this.cacheMap[key];
+        if (value) {
+            this.cache.splice(this.cache.indexOf(key), 1);
+            this.cache.push(key);
+        }
+        return value || null;
+    }
+
+    put (key, value) {
+        const value = this.cacheMap[key];
+        if (value) {
+            this.cache.splice(this.cache.indexOf(key), 1);
+            this.cache.push(key);
+            this.cache[key] = value;
+        } else if (this.capacity < this.cache.length) {
+            const key = this.cache[0];
+            this.cacheMap[key] = null;
+            this.cache.splice(0, 1);
+            this.cache.push(key);
+            this.cache[key] = value;
+        }
+    }
+}
+
 
 class ListNode {
     constructor(key, value) {
